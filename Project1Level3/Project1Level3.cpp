@@ -141,6 +141,102 @@ void printClientData(vector<stClient> vStClient) {
 	cout << "_________________________________________________________________________________________________\n";
 }
 
+string convertRecordToLine(stClient clientInfo, string delim) {
+	string clientRecord = "";
+	clientRecord += clientInfo.AccountNumber + delim;
+	clientRecord += clientInfo.PinCode + delim;
+	clientRecord += clientInfo.Name + delim;
+	clientRecord += clientInfo.Phone + delim;
+	clientRecord += to_string(clientInfo.AccountBalance);
+	return clientRecord;
+}
+
+
+string readAccountNumber() {
+	string AccountNumber;
+	cout << "Please enter the account number : ";
+	cin >> AccountNumber;
+	return AccountNumber;
+
+}
+
+bool clientExistsByAccountNumber(string AccountNumber, string
+	FileName)
+{
+	vector <stClient> vClients;
+	fstream MyFile;
+	MyFile.open(FileName, ios::in);//read Mode
+	if (MyFile.is_open())
+	{
+		string Line;
+		stClient Client;
+		while (getline(MyFile, Line))
+		{
+			Client = convertLineToRecord(Line, "#//#");
+			if (Client.AccountNumber == AccountNumber)
+			{
+				MyFile.close();
+				return true;
+			}
+			vClients.push_back(Client);
+		}
+		MyFile.close();
+	}
+	return false;
+}
+
+
+
+
+stClient readNewClient() {
+	stClient client;
+	cout << "Please enter your account number ?";
+	cin >> client.AccountNumber;
+	while (clientExistsByAccountNumber(client.AccountNumber, fileN) == true) {
+		cout << "\nClient with [" << client.AccountNumber << "]already exists, Enter another Account Number ? ";
+		getline(cin >> ws, client.AccountNumber);
+	}
+	cout << "Please enter your pin code ? ";
+	cin >> client.PinCode;
+	cin.ignore();
+	cout << "Please enter your name ? ";
+	getline(cin, client.Name);
+	cout << "Please enter your phone number ? ";
+	cin >> client.Phone;
+	cout << "Please enter your account balance ? ";
+	cin >> client.AccountBalance;
+	return client;
+}
+
+
+void addClientToFile(string fileName, string record) {
+	fstream MyFile;
+	MyFile.open(fileName, ios::app);
+	if (MyFile.is_open()) {
+		MyFile << record << endl;
+		MyFile.close();
+	}
+}
+
+void AddNewClient()
+{
+	stClient clientInfo;
+	clientInfo = readNewClient();
+	addClientToFile(fileN, convertRecordToLine(clientInfo, "#//#"));
+}
+
+void addClients() {
+	char AddMore = 'Y';
+	do
+	{
+		system("cls");
+		cout << "Adding New Client:\n\n";
+		AddNewClient();
+		cout << "\nClient Added Successfully, do you want to add more clients ? Y / N ? ";
+		cin >> AddMore;
+	} while (toupper(AddMore) == 'Y');
+}
+
 int main()
 {
     enMenu choice;
@@ -149,15 +245,24 @@ int main()
 		system("cls");
         printMenu();
         vector<stClient> vStClient = readFileContent(fileN);
+		string accountNumber;
+		stClient client;
         choice = convertChoiceToEnum(readMenuChoice());
-        switch (choice) {
-            case enMenu::showClients:
-				system("cls");
-                printTableHeader(vStClient.size());
-                printClientData(vStClient);
-                system("pause");
-                break;
-                }
+		switch (choice) {
+		case enMenu::showClients:
+			system("cls");
+			printTableHeader(vStClient.size());
+			printClientData(vStClient);
+			system("pause");
+			break;
+		case enMenu::addClient:
+			system("cls");
+			addClients();
+			system("pause");
+			break;
+
+			
+		}
     } while (choice != enMenu::exitMenu);
    
 }
