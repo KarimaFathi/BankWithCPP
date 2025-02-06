@@ -16,6 +16,7 @@ struct stClient
 	string Name;
 	string Phone;
 	double AccountBalance = 0;
+	bool isMarkedToDelete = false;
 };
 
 enum enMenu { showClients = 1, addClient = 2, deleteClient = 3, updateClient = 4, findClient = 5, exitMenu = 6};
@@ -237,6 +238,97 @@ void addClients() {
 	} while (toupper(AddMore) == 'Y');
 }
 
+vector<stClient> loadFileContentToVector(string fileName) {
+	fstream myFile;
+	short counter = 0;
+	stClient client;
+	vector<stClient> vStClient;
+	myFile.open(fileName, ios::in);
+	if (myFile.is_open()) {
+		string line;
+		while (getline(myFile, line)) {
+			client = convertLineToRecord(line, "#//#");
+			vStClient.push_back(client);
+			counter++;
+		}
+		myFile.close();
+	}
+	return vStClient;
+}
+
+bool isAccountNumberExists(vector<stClient> vStClient, stClient& clientToFind, string accountNumber) {
+	for (stClient& client : vStClient) {
+		if (client.AccountNumber == accountNumber) {
+			clientToFind = client;
+			return true;
+		}
+	}
+	return false;
+}
+
+void printClientRecord(stClient client) {
+	cout << "\nThe following are the client details: \n";
+	cout << "Account Number    : " << client.AccountNumber << endl;
+	cout << "Pin Code          : " << client.PinCode << endl;
+	cout << "Name              : " << client.Name << endl;
+	cout << "Phone             : " << client.Phone << endl;
+	cout << "Account Balance   : " << client.AccountBalance << endl;
+}
+
+
+string convertRecordToStringWithDelim(stClient clientInfo, string delim) {
+	string clientRecord = "";
+	clientRecord += clientInfo.AccountNumber + delim;
+	clientRecord += clientInfo.PinCode + delim;
+	clientRecord += clientInfo.Name + delim;
+	clientRecord += clientInfo.Phone + delim;
+	clientRecord += to_string(clientInfo.AccountBalance);
+	return clientRecord;
+}
+
+void markClientForDeleteByAccountNum(vector<stClient>& vStClient, string accountNumber) {
+	for (stClient& client : vStClient) {
+		if (client.AccountNumber == accountNumber) {
+			client.isMarkedToDelete = true;
+		}
+	}
+}
+
+void saveVectorToFile(string fileName, vector<stClient> vStClient) {
+	fstream myFile;
+	string line;
+	myFile.open(fileName, ios::out); //overwrite
+	if (myFile.is_open()) {
+		for (stClient& client : vStClient) {
+			if (client.isMarkedToDelete == false) {
+				line = convertRecordToStringWithDelim(client, "#//#");
+				myFile << line << endl;
+			}
+		}
+		myFile.close();
+	}
+}
+
+void deleteClientFromFile(vector<stClient>  &vStClient, string accountNumber) {
+	stClient client;
+	char answer = 'n';
+	if (isAccountNumberExists(vStClient, client, accountNumber) == true) {
+		printClientRecord(client);
+		cout << endl << "Are you sure you want to delete this client ? (y/n)\n";
+		cin >> answer;
+		if (answer == 'y' || answer == 'Y') {
+			markClientForDeleteByAccountNum(vStClient, accountNumber);
+			saveVectorToFile(fileN, vStClient);
+			//refresh clients
+			vStClient = loadFileContentToVector(fileN);
+			cout << "Client Deleted Successfully.\n";
+		}
+	}
+	else {
+		cout << "\nClient with account number (" << accountNumber << ") not found !\n";
+	}
+}
+
 int main()
 {
     enMenu choice;
@@ -260,8 +352,12 @@ int main()
 			addClients();
 			system("pause");
 			break;
+		case enMenu::deleteClient:
+			system("cls");
+			accountNumber = readAccountNumber();
+			deleteClientFromFile(vStClient, accountNumber);
 
-			
+
 		}
     } while (choice != enMenu::exitMenu);
    
