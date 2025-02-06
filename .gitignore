@@ -1,0 +1,17 @@
+# Visual Studio files
+.vs/
+*.suo
+*.db
+*.backup.json
+*.json
+
+# Build files
+*.ilk
+*.log
+*.obj
+*.idb
+*.pdb
+*.exe
+
+# Debug files
+x64/Debug/
