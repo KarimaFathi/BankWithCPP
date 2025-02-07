@@ -45,22 +45,6 @@ short readMenuChoice() {
     return choice;
 }
 
-enMenu convertChoiceToEnum(short choice) {
-    switch (choice) {
-    case 1:
-        return enMenu::showClients;
-    case 2:
-        return enMenu::addClient;
-    case 3: 
-        return enMenu::deleteClient;
-    case 4:
-        return enMenu::updateClient;
-    case 5:
-        return enMenu::findClient;
-    case 6:
-        return enMenu::exitMenu;
-    }
-}
 
 vector<string> splitString(string& clientRecord, string delim) {
 	string word = "";
@@ -391,18 +375,16 @@ void updateClientInfo(vector<stClient>& vStClient, string accountNumber) {
 
 
 
+void perfomMainMenuOptions() {
+	short choice;
 
-int main()
-{
-    enMenu choice;
-    
-    do {
+	do {
 		system("cls");
-        printMenu();
-        vector<stClient> vStClient = readFileContent(fileN);
+		printMenu();
+		vector<stClient> vStClient = readFileContent(fileN);
 		string accountNumber;
 		stClient client;
-        choice = convertChoiceToEnum(readMenuChoice());
+		choice = (enMenu)readMenuChoice();
 		switch (choice) {
 		case enMenu::showClients:
 			system("cls");
@@ -446,15 +428,18 @@ int main()
 			system("pause");
 			break;
 		}
-    } while (choice != enMenu::exitMenu);
+	} while (choice != enMenu::exitMenu);
 	if (choice == enMenu::exitMenu) {
 		system("cls");
 		cout << "====================================================\n";
 		cout << "\t\tProgram Ends \n";
 		cout << "====================================================\n\n";
 	}
-	return 0;
-   
 }
 
 
+int main()
+{
+	perfomMainMenuOptions();
+	return 0;
+}
