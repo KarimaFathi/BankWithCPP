@@ -277,6 +277,17 @@ void printClientRecord(stClient client) {
 }
 
 
+void findClientByAccountNumber(string accountNumber, vector<stClient> vStClient) {
+	stClient client;
+	if (isAccountNumberExists(vStClient, client, accountNumber)) {
+		printClientRecord(client);
+	}
+	else {
+		cout << "\nClient with account number (" << accountNumber << ") not found !\n";
+	}
+
+}
+
 string convertRecordToStringWithDelim(stClient clientInfo, string delim) {
 	string clientRecord = "";
 	clientRecord += clientInfo.AccountNumber + delim;
@@ -378,6 +389,9 @@ void updateClientInfo(vector<stClient>& vStClient, string accountNumber) {
 	}
 }
 
+
+
+
 int main()
 {
     enMenu choice;
@@ -411,6 +425,8 @@ int main()
 			cout << "====================================================\n\n";
 			accountNumber = readAccountNumber();
 			deleteClientFromFile(vStClient, accountNumber);
+			system("pause");
+			break;
 		case enMenu::updateClient:
 			system("cls");
 			cout << "====================================================\n";
@@ -418,9 +434,26 @@ int main()
 			cout << "====================================================\n\n";
 			accountNumber = readAccountNumber();
 			updateClientInfo(vStClient, accountNumber);
-
+			system("pause");
+			break;
+		case enMenu::findClient:
+			system("cls");
+			cout << "====================================================\n";
+			cout << "\t\tFind Client Info Screen\n";
+			cout << "====================================================\n\n";
+			accountNumber = readAccountNumber();
+			findClientByAccountNumber(accountNumber, vStClient);
+			system("pause");
+			break;
 		}
     } while (choice != enMenu::exitMenu);
+	if (choice == enMenu::exitMenu) {
+		system("cls");
+		cout << "====================================================\n";
+		cout << "\t\tProgram Ends \n";
+		cout << "====================================================\n\n";
+	}
+	return 0;
    
 }
 
