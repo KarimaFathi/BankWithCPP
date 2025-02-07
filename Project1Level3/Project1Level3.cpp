@@ -395,6 +395,16 @@ void showUpdateClientScreen()
 	updateClientInfo(vStClient, accountNumber);
 }
 
+void ShowFindClientScreen()
+{
+	cout << "\n-----------------------------------\n";
+	cout << "\tFind Client Screen";
+	cout << "\n-----------------------------------\n";
+	vector<stClient> vStClient = readFileContent(fileN);
+	string accountNumber = readAccountNumber();
+	findClientByAccountNumber(accountNumber, vStClient);
+}
+
 void perfomMainMenuOptions(enMenu choice) {
 		system("cls");
 		vector<stClient> vStClient = readFileContent(fileN);
@@ -423,12 +433,8 @@ void perfomMainMenuOptions(enMenu choice) {
 			break;
 		case enMenu::findClient:
 			system("cls");
-			cout << "====================================================\n";
-			cout << "\t\tFind Client Info Screen\n";
-			cout << "====================================================\n\n";
-			accountNumber = readAccountNumber();
-			findClientByAccountNumber(accountNumber, vStClient);
-			system("pause");
+			ShowFindClientScreen();
+			goBackToMainMenu();
 			break;
 		case enMenu::exitMenu:
 			system("cls");
