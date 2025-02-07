@@ -171,7 +171,6 @@ void addClients() {
 	char AddMore = 'Y';
 	do
 	{
-		system("cls");
 		cout << "Adding New Client:\n\n";
 		AddNewClient();
 		cout << "\nClient Added Successfully, do you want to add more clients ? Y / N ? ";
@@ -366,7 +365,7 @@ void goBackToMainMenu()
 	showMainMenu();
 }
 
-void ShowAddNewClientsScreen()
+void showAddNewClientsScreen()
 {
 	cout << "\n-----------------------------------\n";
 	cout << "\tAdd New Clients Screen";
@@ -421,7 +420,7 @@ void perfomMainMenuOptions(enMenu choice) {
 			break;
 		case enMenu::addClient:
 			system("cls");
-			ShowAddNewClientsScreen();
+			showAddNewClientsScreen();
 			goBackToMainMenu();
 			break;
 		case enMenu::deleteClient:
