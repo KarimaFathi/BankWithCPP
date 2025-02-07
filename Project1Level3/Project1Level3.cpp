@@ -17,6 +17,7 @@ struct stClient
 	string Phone;
 	double AccountBalance = 0;
 	bool isMarkedToDelete = false;
+	bool isMarkedToUpdate = false;
 };
 
 enum enMenu { showClients = 1, addClient = 2, deleteClient = 3, updateClient = 4, findClient = 5, exitMenu = 6};
@@ -329,6 +330,54 @@ void deleteClientFromFile(vector<stClient>  &vStClient, string accountNumber) {
 	}
 }
 
+void markClientForUpdateByAccountNum(vector<stClient>& vStClient, string accountNumber) {
+	for (stClient& client : vStClient) {
+		if (client.AccountNumber == accountNumber) {
+			client.isMarkedToUpdate = true;
+		}
+	}
+}
+void getClientUpdatedInfo(vector<stClient>& vStClient) {
+
+	for (stClient& client : vStClient) {
+		if (client.isMarkedToUpdate == true) {
+			cout << "\nPlease enter the new pin code ?";
+			cin >> client.PinCode;
+			cout << "Please enter the new name ?";
+			cin.ignore(); //cin >> leaves a newline character (\n) in the input buffer, which causes the subsequent getline(cin, client.Name) to read an empty string.
+			getline(cin, client.Name);
+			cout << "Please enter the new phone number ?";
+			cin >> client.Phone;
+			cout << "Please enter the new account balance ?";
+			cin >> client.AccountBalance;
+		}
+	}
+
+}
+
+
+void updateClientInfo(vector<stClient>& vStClient, string accountNumber) {
+	stClient client;
+	char answer = 'n';
+
+	if (isAccountNumberExists(vStClient, client, accountNumber) == true) {
+		printClientRecord(client);
+		cout << endl << "Are you sure you want to update this client ? (y/n)\n";
+		cin >> answer;
+		if (answer == 'y' || answer == 'Y') {
+			markClientForUpdateByAccountNum(vStClient, accountNumber);
+			getClientUpdatedInfo(vStClient);
+			saveVectorToFile(fileN, vStClient);
+			//refresh clients
+			/*vStClient = loadFileContentToVector(fileName);*/
+			cout << "\nClient Updated Successfully.\n";
+		}
+	}
+	else {
+		cout << "\nClient with account number (" << accountNumber << ") not found !\n";
+	}
+}
+
 int main()
 {
     enMenu choice;
@@ -349,14 +398,26 @@ int main()
 			break;
 		case enMenu::addClient:
 			system("cls");
+			cout << "====================================================\n";
+			cout << "\t\tAdd Client(s) Screen\n";
+			cout << "====================================================\n\n";
 			addClients();
 			system("pause");
 			break;
 		case enMenu::deleteClient:
 			system("cls");
+			cout << "====================================================\n";
+			cout << "\t\tUpdate Client(s) Screen\n";
+			cout << "====================================================\n\n";
 			accountNumber = readAccountNumber();
 			deleteClientFromFile(vStClient, accountNumber);
-
+		case enMenu::updateClient:
+			system("cls");
+			cout << "====================================================\n";
+			cout << "\t\tUpdate Client Info Screen\n";
+			cout << "====================================================\n\n";
+			accountNumber = readAccountNumber();
+			updateClientInfo(vStClient, accountNumber);
 
 		}
     } while (choice != enMenu::exitMenu);
