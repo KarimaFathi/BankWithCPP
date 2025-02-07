@@ -6,6 +6,7 @@
 #include <cstdlib>
 using namespace std;
 
+void showMainMenu();
 
 const string fileN = "clients.txt";
 
@@ -23,18 +24,6 @@ struct stClient
 enum enMenu { showClients = 1, addClient = 2, deleteClient = 3, updateClient = 4, findClient = 5, exitMenu = 6};
 
 
-void printMenu() {
-    cout << "=========================================================\n";
-    cout << "\t\tMain Menu Screen\n";
-    cout << "=========================================================\n";
-    cout << "\t[1] Show Client List.\n";
-    cout << "\t[2] Add New Client.\n";
-    cout << "\t[3] Delete Client.\n";
-    cout << "\t[4] Update Client Info.\n";
-    cout << "\t[5] Find Client.\n";
-    cout << "\t[6] Exit.\n";
-    cout << "=========================================================\n";
-}
 
 short readMenuChoice() {
     short choice;
@@ -92,39 +81,6 @@ vector<stClient> readFileContent(string fileName) {
 		myFile.close();
 	}
 	return vStClient;
-}
-
-void printTableHeader(short counter) {
-	char col1[] = "Account Number";
-	char col2[] = "Pin Code";
-	char col3[] = "Client Name";
-	char col4[] = "Phone";
-	char col5[] = "Balance";
-
-	cout << "\t\t\t\t\t Client List (" << counter << ") Client(s).\n";
-	cout << "_________________________________________________________________________________________________\n\n";
-
-	// Use 'left' to align text to the left in each column
-	cout << "| " << left << setw(16) << col1
-		<< "| " << left << setw(11) << col2
-		<< "| " << left << setw(40) << col3
-		<< "| " << left << setw(12) << col4
-		<< "| " << left << setw(10) << col5 << endl;
-
-	cout << "_________________________________________________________________________________________________\n\n";
-}
-
-
-void printClientData(vector<stClient> vStClient) {
-	for (const stClient& data : vStClient) {
-		// Apply 'left' to align text to the left in each column
-		cout << "| " << left << setw(16) << data.AccountNumber
-			<< "| " << left << setw(11) << data.PinCode
-			<< "| " << left << setw(40) << data.Name
-			<< "| " << left << setw(12) << data.Phone
-			<< "| " << left << setw(10) << data.AccountBalance << endl;
-	}
-	cout << "_________________________________________________________________________________________________\n";
 }
 
 string convertRecordToLine(stClient clientInfo, string delim) {
@@ -373,24 +329,54 @@ void updateClientInfo(vector<stClient>& vStClient, string accountNumber) {
 	}
 }
 
+void ShowAllClientsScreen() {
+	vector<stClient> vStClient = readFileContent(fileN);
+	char col1[] = "Account Number";
+	char col2[] = "Pin Code";
+	char col3[] = "Client Name";
+	char col4[] = "Phone";
+	char col5[] = "Balance";
 
+	cout << "\t\t\t\t\t Client List (" << vStClient.size() << ") Client(s).\n";
+	cout << "_________________________________________________________________________________________________\n\n";
 
-void perfomMainMenuOptions() {
-	short choice;
+	// Use 'left' to align text to the left in each column
+	cout << "| " << left << setw(16) << col1
+		<< "| " << left << setw(11) << col2
+		<< "| " << left << setw(40) << col3
+		<< "| " << left << setw(12) << col4
+		<< "| " << left << setw(10) << col5 << endl;
 
-	do {
+	cout << "_________________________________________________________________________________________________\n\n";
+	for (const stClient& data : vStClient) {
+		// Apply 'left' to align text to the left in each column
+		cout << "| " << left << setw(16) << data.AccountNumber
+			<< "| " << left << setw(11) << data.PinCode
+			<< "| " << left << setw(40) << data.Name
+			<< "| " << left << setw(12) << data.Phone
+			<< "| " << left << setw(10) << data.AccountBalance << endl;
+	}
+	cout << "_________________________________________________________________________________________________\n";
+}
+
+void goBackToMainMenu()
+{
+	cout << "\n\nPress any key to go back to Main Menu...";
+	system("pause>0");
+	system("cls");
+	showMainMenu();
+}
+
+void perfomMainMenuOptions(enMenu choice) {
 		system("cls");
-		printMenu();
 		vector<stClient> vStClient = readFileContent(fileN);
 		string accountNumber;
 		stClient client;
-		choice = (enMenu)readMenuChoice();
 		switch (choice) {
 		case enMenu::showClients:
 			system("cls");
-			printTableHeader(vStClient.size());
-			printClientData(vStClient);
-			system("pause");
+			ShowAllClientsScreen();
+			goBackToMainMenu();
 			break;
 		case enMenu::addClient:
 			system("cls");
@@ -427,19 +413,35 @@ void perfomMainMenuOptions() {
 			findClientByAccountNumber(accountNumber, vStClient);
 			system("pause");
 			break;
+		case enMenu::exitMenu:
+			system("cls");
+			cout << "====================================================\n";
+			cout << "\t\tProgram Ends \n";
+			cout << "====================================================\n\n";
+			system("pause");
+			break;
 		}
-	} while (choice != enMenu::exitMenu);
-	if (choice == enMenu::exitMenu) {
-		system("cls");
-		cout << "====================================================\n";
-		cout << "\t\tProgram Ends \n";
-		cout << "====================================================\n\n";
-	}
 }
+
+void showMainMenu() {
+	cout << "=========================================================\n";
+	cout << "\t\tMain Menu Screen\n";
+	cout << "=========================================================\n";
+	cout << "\t[1] Show Client List.\n";
+	cout << "\t[2] Add New Client.\n";
+	cout << "\t[3] Delete Client.\n";
+	cout << "\t[4] Update Client Info.\n";
+	cout << "\t[5] Find Client.\n";
+	cout << "\t[6] Exit.\n";
+	cout << "=========================================================\n";
+	perfomMainMenuOptions((enMenu)readMenuChoice());
+}
+
+
 
 
 int main()
 {
-	perfomMainMenuOptions();
+	showMainMenu();
 	return 0;
 }
