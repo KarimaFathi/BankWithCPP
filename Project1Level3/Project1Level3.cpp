@@ -405,11 +405,14 @@ void ShowFindClientScreen()
 	findClientByAccountNumber(accountNumber, vStClient);
 }
 
+void showEndScreen()
+{
+	cout << "\n-----------------------------------\n";
+	cout << "\tProgram Ends :-)";
+	cout << "\n-----------------------------------\n";
+}
+
 void perfomMainMenuOptions(enMenu choice) {
-		system("cls");
-		vector<stClient> vStClient = readFileContent(fileN);
-		string accountNumber;
-		stClient client;
 		switch (choice) {
 		case enMenu::showClients:
 			system("cls");
@@ -438,10 +441,7 @@ void perfomMainMenuOptions(enMenu choice) {
 			break;
 		case enMenu::exitMenu:
 			system("cls");
-			cout << "====================================================\n";
-			cout << "\t\tProgram Ends \n";
-			cout << "====================================================\n\n";
-			system("pause");
+			showEndScreen();
 			break;
 		}
 }
@@ -459,9 +459,6 @@ void showMainMenu() {
 	cout << "=========================================================\n";
 	perfomMainMenuOptions((enMenu)readMenuChoice());
 }
-
-
-
 
 int main()
 {
