@@ -375,7 +375,6 @@ void ShowAddNewClientsScreen()
 }
 
 
-
 void showDeleteClientScreen()
 {
 	cout << "\n-----------------------------------\n";
@@ -384,6 +383,16 @@ void showDeleteClientScreen()
 	vector<stClient> vStClient = readFileContent(fileN);
 	string accountNumber = readAccountNumber();
 	deleteClientFromFile(vStClient, accountNumber);
+}
+
+void showUpdateClientScreen()
+{
+	cout << "\n-----------------------------------\n";
+	cout << "\tUpdate Client Info Screen";
+	cout << "\n-----------------------------------\n";
+	vector<stClient> vStClient = readFileContent(fileN);
+	string accountNumber = readAccountNumber();
+	updateClientInfo(vStClient, accountNumber);
 }
 
 void perfomMainMenuOptions(enMenu choice) {
@@ -409,12 +418,8 @@ void perfomMainMenuOptions(enMenu choice) {
 			break;
 		case enMenu::updateClient:
 			system("cls");
-			cout << "====================================================\n";
-			cout << "\t\tUpdate Client Info Screen\n";
-			cout << "====================================================\n\n";
-			accountNumber = readAccountNumber();
-			updateClientInfo(vStClient, accountNumber);
-			system("pause");
+			showUpdateClientScreen();
+			goBackToMainMenu();
 			break;
 		case enMenu::findClient:
 			system("cls");
