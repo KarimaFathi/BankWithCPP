@@ -306,7 +306,6 @@ void getClientUpdatedInfo(vector<stClient>& vStClient) {
 
 }
 
-
 void updateClientInfo(vector<stClient>& vStClient, string accountNumber) {
 	stClient client;
 	char answer = 'n';
@@ -338,25 +337,25 @@ void ShowAllClientsScreen() {
 	char col5[] = "Balance";
 
 	cout << "\t\t\t\t\t Client List (" << vStClient.size() << ") Client(s).\n";
-	cout << "_________________________________________________________________________________________________\n\n";
+	cout << "___________________________________________________________________________________________________\n\n";
 
 	// Use 'left' to align text to the left in each column
 	cout << "| " << left << setw(16) << col1
 		<< "| " << left << setw(11) << col2
 		<< "| " << left << setw(40) << col3
-		<< "| " << left << setw(12) << col4
+		<< "| " << left << setw(15) << col4
 		<< "| " << left << setw(10) << col5 << endl;
 
-	cout << "_________________________________________________________________________________________________\n\n";
+	cout << "___________________________________________________________________________________________________\n\n";
 	for (const stClient& data : vStClient) {
 		// Apply 'left' to align text to the left in each column
 		cout << "| " << left << setw(16) << data.AccountNumber
 			<< "| " << left << setw(11) << data.PinCode
 			<< "| " << left << setw(40) << data.Name
-			<< "| " << left << setw(12) << data.Phone
+			<< "| " << left << setw(15) << data.Phone
 			<< "| " << left << setw(10) << data.AccountBalance << endl;
 	}
-	cout << "_________________________________________________________________________________________________\n";
+	cout << "___________________________________________________________________________________________________\n";
 }
 
 void goBackToMainMenu()
@@ -367,6 +366,13 @@ void goBackToMainMenu()
 	showMainMenu();
 }
 
+void ShowAddNewClientsScreen()
+{
+	cout << "\n-----------------------------------\n";
+	cout << "\tAdd New Clients Screen";
+	cout << "\n-----------------------------------\n";
+	addClients();
+}
 void perfomMainMenuOptions(enMenu choice) {
 		system("cls");
 		vector<stClient> vStClient = readFileContent(fileN);
@@ -380,11 +386,8 @@ void perfomMainMenuOptions(enMenu choice) {
 			break;
 		case enMenu::addClient:
 			system("cls");
-			cout << "====================================================\n";
-			cout << "\t\tAdd Client(s) Screen\n";
-			cout << "====================================================\n\n";
-			addClients();
-			system("pause");
+			ShowAddNewClientsScreen();
+			goBackToMainMenu();
 			break;
 		case enMenu::deleteClient:
 			system("cls");
