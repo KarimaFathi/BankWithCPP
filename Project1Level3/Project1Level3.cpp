@@ -7,6 +7,7 @@
 using namespace std;
 
 void showMainMenu();
+void showTransactionsMenu();
 
 const string fileN = "clients.txt";
 
@@ -21,16 +22,17 @@ struct stClient
 	bool isMarkedToUpdate = false;
 };
 
-enum enMenu { showClients = 1, addClient = 2, deleteClient = 3, updateClient = 4, findClient = 5, exitMenu = 6};
+enum enMenu { showClients = 1, addClient = 2, deleteClient = 3, updateClient = 4, findClient = 5, transactions = 6, exitMenu = 7};
+enum enTransactionsMenu { deposite = 1, withdraw = 2, totalBalance = 3, mainMenu = 4 };
 
 
 
-short readMenuChoice() {
+short readMenuChoice(string message, short min, short max) {
     short choice;
     do {
-        cout << "Please select an option from the menu above (1-6): ";
+        cout << message;
         cin >> choice;
-    } while (choice > 6 || choice < 1);
+    } while (choice > max || choice < min);
     return choice;
 }
 
@@ -411,6 +413,63 @@ void showEndScreen()
 	cout << "\n-----------------------------------\n";
 }
 
+
+
+void showDepositScreen() {
+	cout << "\n-----------------------------------\n";
+	cout << "\tDeposit Screen";
+	cout << "\n-----------------------------------\n";
+	string accountNumber = readAccountNumber();
+	vector<stClient> vStClient = readFileContent(fileN);
+	stClient client;
+	int depositAmount;
+	char answer;
+	while (isAccountNumberExists(vStClient, client, accountNumber) == false) {
+		cout << "\nClient with [" << accountNumber << "] does not exist. \n";
+		accountNumber = readAccountNumber();
+	}
+	printClientRecord(client);
+	cout << "\nPlease enter deposit amount ?\n";
+	cin >> depositAmount;
+	cout << "Are you sure you want to perform this transaction? (y/n) ";
+	cin >> answer;
+	if (answer == 'y' || answer == 'Y') {
+		cout << "Done successfully, the new balance is : " << client.AccountBalance + depositAmount;
+	}
+	else {
+		cout << "No changes was done\n";
+	}
+}
+
+void goBackToTransactionMenu() {
+	cout << "\n\nPress any key to go back to Main Menu...";
+	system("pause>0");
+	system("cls");
+	showTransactionsMenu();
+}
+
+void performTransactionsMenuOptions(enTransactionsMenu choice) {
+	switch (choice) {
+	case enTransactionsMenu::deposite:
+		system("cls");
+		showDepositScreen();
+		goBackToTransactionMenu();
+		break;
+	}
+}
+
+void showTransactionsMenu() {
+	cout << "=========================================================\n";
+	cout << "\t\tTransactions Menu Screen\n";
+	cout << "=========================================================\n";
+	cout << "\t[1] Deposit.\n";
+	cout << "\t[2] Withdraw.\n";
+	cout << "\t[3] Total Balances.\n";
+	cout << "\t[4] Main Menu.\n";
+	cout << "=========================================================\n";
+	performTransactionsMenuOptions((enTransactionsMenu)readMenuChoice("Please select an option from the menu above (1-4): ", 1, 4));
+}
+
 void perfomMainMenuOptions(enMenu choice) {
 		switch (choice) {
 		case enMenu::showClients:
@@ -438,12 +497,18 @@ void perfomMainMenuOptions(enMenu choice) {
 			ShowFindClientScreen();
 			goBackToMainMenu();
 			break;
+		case enMenu::transactions:
+			system("cls");
+			showTransactionsMenu();
+			goBackToMainMenu();
+			break;
 		case enMenu::exitMenu:
 			system("cls");
 			showEndScreen();
 			break;
 		}
 }
+
 
 void showMainMenu() {
 	cout << "=========================================================\n";
@@ -454,9 +519,10 @@ void showMainMenu() {
 	cout << "\t[3] Delete Client.\n";
 	cout << "\t[4] Update Client Info.\n";
 	cout << "\t[5] Find Client.\n";
-	cout << "\t[6] Exit.\n";
+	cout << "\t[6] Transactions.\n";
+	cout << "\t[7] Exit.\n";
 	cout << "=========================================================\n";
-	perfomMainMenuOptions((enMenu)readMenuChoice());
+	perfomMainMenuOptions((enMenu)readMenuChoice("Please select an option from the menu above (1-7): ", 1, 7));
 }
 
 int main()
