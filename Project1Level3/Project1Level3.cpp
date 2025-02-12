@@ -413,7 +413,18 @@ void showEndScreen()
 	cout << "\n-----------------------------------\n";
 }
 
-
+void getClientDepositInfo(vector<stClient>& vStClient, string accountNumber, stClient &client) {
+	int depositAmount;
+	for (stClient& clientInVec : vStClient) {
+		if (clientInVec.AccountNumber == accountNumber) {
+			cout << "\nPlease enter deposit amount ?\n";
+			cin >> depositAmount;
+			clientInVec.AccountBalance += depositAmount;
+			client = clientInVec;
+		
+		}
+	}
+}
 
 void showDepositScreen() {
 	cout << "\n-----------------------------------\n";
@@ -429,15 +440,15 @@ void showDepositScreen() {
 		accountNumber = readAccountNumber();
 	}
 	printClientRecord(client);
-	cout << "\nPlease enter deposit amount ?\n";
-	cin >> depositAmount;
+	getClientDepositInfo(vStClient, accountNumber, client);
 	cout << "Are you sure you want to perform this transaction? (y/n) ";
 	cin >> answer;
 	if (answer == 'y' || answer == 'Y') {
-		cout << "Done successfully, the new balance is : " << client.AccountBalance + depositAmount;
+		saveVectorToFile(fileN, vStClient);
+		cout << "Done successfully, the new balance is : " << client.AccountBalance ;
 	}
 	else {
-		cout << "No changes was done\n";
+		cout << "No changes were made\n";
 	}
 }
 
@@ -448,11 +459,41 @@ void goBackToTransactionMenu() {
 	showTransactionsMenu();
 }
 
+
+void showBalanceScreen() {
+	vector<stClient> vStClient = readFileContent(fileN);
+	char col1[] = "Account Number";
+	char col2[] = "Client Name";
+	char col3[] = "Balance";
+
+	cout << "\t\t\t\t\t Client List (" << vStClient.size() << ") Client(s).\n";
+	cout << "___________________________________________________________________________________________________\n\n";
+
+	// Use 'left' to align text to the left in each column
+	cout << "| " << left << setw(16) << col1
+		<< "| " << left << setw(40) << col2
+		<< "| " << left << setw(10) << col3 << endl;
+
+	cout << "___________________________________________________________________________________________________\n\n";
+	for (const stClient& data : vStClient) {
+		// Apply 'left' to align text to the left in each column
+		cout << "| " << left << setw(16) << data.AccountNumber
+			<< "| " << left << setw(40) << data.Name
+			<< "| " << left << setw(10) << data.AccountBalance << endl;
+	}
+	cout << "___________________________________________________________________________________________________\n";
+}
+
 void performTransactionsMenuOptions(enTransactionsMenu choice) {
 	switch (choice) {
 	case enTransactionsMenu::deposite:
 		system("cls");
 		showDepositScreen();
+		goBackToTransactionMenu();
+		break;
+	case enTransactionsMenu::totalBalance:
+		system("cls");
+		showBalanceScreen();
 		goBackToTransactionMenu();
 		break;
 	}
