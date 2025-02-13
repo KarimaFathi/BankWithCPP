@@ -465,6 +465,7 @@ void showBalanceScreen() {
 	char col1[] = "Account Number";
 	char col2[] = "Client Name";
 	char col3[] = "Balance";
+	int balanceSum = 0;
 
 	cout << "\t\t\t\t\t Client List (" << vStClient.size() << ") Client(s).\n";
 	cout << "___________________________________________________________________________________________________\n\n";
@@ -480,8 +481,10 @@ void showBalanceScreen() {
 		cout << "| " << left << setw(16) << data.AccountNumber
 			<< "| " << left << setw(40) << data.Name
 			<< "| " << left << setw(10) << data.AccountBalance << endl;
+		balanceSum += data.AccountBalance;
 	}
-	cout << "___________________________________________________________________________________________________\n";
+	cout << "___________________________________________________________________________________________________\n\n";
+	cout << "\t\t\t\t\t\t Total Balances = " << balanceSum;
 }
 
 void performTransactionsMenuOptions(enTransactionsMenu choice) {
