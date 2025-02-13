@@ -19,3 +19,21 @@ You can view a quick video demonstration of the Client Management System in acti
 https://github.com/user-attachments/assets/8b925feb-5be0-475f-9b68-2585c6203828
 
 
+## Program Extension
+
+The program has been extended to include a transactions option in the main menu, which provides the following options: deposit, withdraw, show balances, and return to the main menu.
+
+## Video Demonstration
+
+The video below showcases how the extended system works with the new features.
+
+https://github.com/user-attachments/assets/f0ec86cc-9df8-4b1d-8c56-f9e1c43f20ea
+
+
+
+
+
+
+
+
+
