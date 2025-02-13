@@ -547,6 +547,9 @@ void performTransactionsMenuOptions(enTransactionsMenu choice) {
 		showWithdrawScreen();
 		goBackToTransactionMenu();
 		break;
+	case enTransactionsMenu::mainMenu:
+		system("cls");
+		showMainMenu();
 	}
 }
 
