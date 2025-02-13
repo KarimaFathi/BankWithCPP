@@ -433,7 +433,6 @@ void showDepositScreen() {
 	string accountNumber = readAccountNumber();
 	vector<stClient> vStClient = readFileContent(fileN);
 	stClient client;
-	int depositAmount;
 	char answer;
 	while (isAccountNumberExists(vStClient, client, accountNumber) == false) {
 		cout << "\nClient with [" << accountNumber << "] does not exist. \n";
@@ -446,6 +445,48 @@ void showDepositScreen() {
 	if (answer == 'y' || answer == 'Y') {
 		saveVectorToFile(fileN, vStClient);
 		cout << "Done successfully, the new balance is : " << client.AccountBalance ;
+	}
+	else {
+		cout << "No changes were made\n";
+	}
+}
+
+void getClientWithdrawInfo(vector<stClient> &vStClient, string accountNumber, stClient &client) {
+	int withdrawAmount;
+	for (stClient& clientInVec : vStClient) {
+		if (clientInVec.AccountNumber == accountNumber) {
+			cout << "\nPlease enter withdraw amount ?\n";
+			cin >> withdrawAmount;
+		    while (withdrawAmount > clientInVec.AccountBalance) {
+				cout << "Amount exceeds the balance, you can withdraw up to :" << clientInVec.AccountBalance;
+				cout << "Please enter another amount ? ";
+				cin >> withdrawAmount;
+			} 
+			clientInVec.AccountBalance -= withdrawAmount;
+			client = clientInVec;
+		}
+	}
+}
+
+void showWithdrawScreen() {
+	cout << "\n-----------------------------------\n";
+	cout << "\twithdraw Screen";
+	cout << "\n-----------------------------------\n";
+	string accountNumber = readAccountNumber();
+	vector<stClient> vStClient = readFileContent(fileN);
+	stClient client;
+	char answer;
+	while (isAccountNumberExists(vStClient, client, accountNumber) == false) {
+		cout << "\nClient with [" << accountNumber << "] does not exist. \n";
+		accountNumber = readAccountNumber();
+	}
+	printClientRecord(client);
+	getClientWithdrawInfo(vStClient, accountNumber, client);
+	cout << "Are you sure you want to perform this transaction? (y/n) ";
+	cin >> answer;
+	if (answer == 'y' || answer == 'Y') {
+		saveVectorToFile(fileN, vStClient);
+		cout << "Done successfully, the new balance is : " << client.AccountBalance;
 	}
 	else {
 		cout << "No changes were made\n";
@@ -487,6 +528,8 @@ void showBalanceScreen() {
 	cout << "\t\t\t\t\t\t Total Balances = " << balanceSum;
 }
 
+
+
 void performTransactionsMenuOptions(enTransactionsMenu choice) {
 	switch (choice) {
 	case enTransactionsMenu::deposite:
@@ -497,6 +540,11 @@ void performTransactionsMenuOptions(enTransactionsMenu choice) {
 	case enTransactionsMenu::totalBalance:
 		system("cls");
 		showBalanceScreen();
+		goBackToTransactionMenu();
+		break;
+	case enTransactionsMenu::withdraw:
+		system("cls");
+		showWithdrawScreen();
 		goBackToTransactionMenu();
 		break;
 	}
